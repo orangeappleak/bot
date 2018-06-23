@@ -37,6 +37,9 @@ async def on_message(msg):
     if msg.content.lower().startswith('?discord.py-documentation'):
         embed=discord.Embed(description='API Reference--->\nhttp://discordpy.readthedocs.io/en/latest/api.html',colour=discord.Colour.blue())
         await client.send_message(msg.channel,embed=embed)
+    if msg.content.lower().startswith('?discord.py_rewrite_documentation'):
+        embed=discord.Embed(title='here you go\nhttps://discordpy.readthedocs.io/en/rewrite/api.html',description='heres the documentation for the discord.py rewrite')
+        await client.say(embed=embed
     await client.process_commands(msg)
 
 @client.command(pass_context=True)
