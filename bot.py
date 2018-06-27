@@ -27,19 +27,25 @@ async def change_stat():#background task function
 async def on_message(msg):
     if msg.content.lower().startswith('you have to'):
         possibilities=['hey,i have my free will in this server and i cant be doing as you say okay','i have my freedom over here so........']
+        await client.send_typing(msg.message.channel)
         await client.send_message(msg.channel,random.choice(possibilities))
     chat_filter=['fuck','fuck off','dick','bitch']
     msd=msg.content.split(" ")
     for word in msd:
         if word.lower() in chat_filter:
             await client.delete_message(msg)
+            await client.send_typing(msg.message.channel)
             await client.send_message(msg.author,'hey you cant be using such type of words in this server punk')
     if msg.content.lower().startswith('?discord.py-documentation'):
         embed=discord.Embed(description='API Reference--->\nhttp://discordpy.readthedocs.io/en/latest/api.html',colour=discord.Colour.blue())
+        await client.send_typing(msg.channel)
         await client.send_message(msg.channel,embed=embed)
-    if msg.content.lower().startswith('?discord.py_rewrite_documentation'):
-        embed=discord.Embed(title='here you go\nhttps://discordpy.readthedocs.io/en/rewrite/api.html',description='heres the documentation for the discord.py rewrite')
-        await client.send_message(msg.channel,embed=embed)
+    if msg.content.lower().startswith('?clash_royale_api'):
+        await client.send_message(msg.channel,'https://docs.royaleapi.com/#/')
+    if msg.content.lower().startswith('thanks') or msg.content.lower().startswith('thank you'):
+        u=['no issuses','no problem dude','youre welcome','always here to help']
+        await client.send_typing(msg.channel)
+        await client.send_message(msg.channel,random.choice(u) + '{}'.format(msg.author.mention))
     await client.process_commands(msg)
 
 @client.command(pass_context=True)
@@ -217,9 +223,11 @@ async def help(ctx):
     embed.add_field(name='create_channel->',value='it creates a new channel',inline=False)
     embed.add_field(name='delete_channel [channel_name]->',value='it deletes an existing channel',inline=False)
     embed.add_field(name='edit_channel [channel_name]->',value='it edits an existing channel',inline=False)
-    embed.add_field(name='coinflip->',value='flips a coin',inline=False)
     embed.add_field(name='rules->',value='rules of the server',inline=False)
+    embed.add_field(name='JUST FOR FUN COMMANDS')
+    embed.add_field(name='coinflip->',value='flips a coin',inline=False)
     embed.add_field(name='kiss [user_name]->',value='kisses a member in the server',inline=False)
+    embed.add_field(name='hug [user_name]->',value='gives a hug to the mentioned user',inline=False)
     await client.send_typing(ctx.message.channel)
     await client.send_message(ctx.message.author,embed=embed)
 
@@ -234,7 +242,16 @@ async def rules(ctx):
     embed.add_field(name='5.',value='do not use any kind of language or abusive words that can harm others',inline=False)
     embed.add_field(name='NOTE',value='any violations of the above mentioned rule can lead to kicking or banning you from the server')
     await client.send_typing(ctx.message.channel)
-    await client.send_message(ctx.message.author,embed=embed)
+    await client.send_message(ctx.message.channel,embed=embed)
+
+@client.command(pass_context=True)
+async def hug(ctx,user:discord.Member):
+    hug=discord.Embed(description='hey {}, {}\'s giving you a hug',colour=discord.Colour.dark_red())
+    hugs=['https://cdn.discordapp.com/attachments/455323478267133962/461492044859179008/tenor.gif'
+    'https://cdn.discordapp.com/attachments/455323478267133962/461492634461143050/oTuXFQ4.gif'
+    ]
+    hug.set_image(url=random.choice(hugs))
+    await client.say(embed=hug)
 
 @client.event#greets a new member on join
 async def on_member_join(member:discord.Member):
@@ -242,10 +259,11 @@ async def on_member_join(member:discord.Member):
     await client.send_message(member,'befor you start texting type in ++rules and check them first')
     await client.send_message(member,'if you need any help then type in ++help command for assistance')
 
+
 @client.event
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
 
 client.loop.create_task(change_stat())
-client.run(os.environ.get('TOKEN'))
+client.run(os.environ.get(TOKEN))
