@@ -266,4 +266,4 @@ async def on_ready():
     print('ID is:' + client.user.id)
 
 client.loop.create_task(change_stat())
-client.run(os.environ.get(TOKEN))
+client.run(os.environ.get('TOKEN'))
