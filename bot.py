@@ -224,7 +224,7 @@ async def help(ctx):
     embed.add_field(name='delete_channel [channel_name]->',value='it deletes an existing channel',inline=False)
     embed.add_field(name='edit_channel [channel_name]->',value='it edits an existing channel',inline=False)
     embed.add_field(name='rules->',value='rules of the server',inline=False)
-    embed.add_field(name='JUST FOR FUN COMMANDS')
+    embed.add_field(name='JUST FOR FUN COMMANDS',value='some fun commands that the bot can perform)
     embed.add_field(name='coinflip->',value='flips a coin',inline=False)
     embed.add_field(name='kiss [user_name]->',value='kisses a member in the server',inline=False)
     embed.add_field(name='hug [user_name]->',value='gives a hug to the mentioned user',inline=False)
