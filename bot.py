@@ -103,17 +103,18 @@ async def info(ctx,user:discord.Member):
 
 @client.command(pass_context=True)#deletes the messages
 async def delete_messages(ctx):
-    if 'admin' in (role.name for role in ctx.message.author.roles):
-        await client.send_typing(ctx.message.channel)
-        await client.say('gimme a sec')
-        await client.purge_from(channel=ctx.message.channel,limit=1000)
-        await client.send_typing(ctx.message.channel)
-        await client.say('there you go <@%s>' % ctx.message.author.id)
-    elif "admin" not in (role.name for role in ctx.message.author.roles):
-        await client.send_typing(ctx.message.channel)
-        await client.say('you have to be an admin in order to that')
-    else:
-        await client.say("sorry but i could not delete the messages which are 14 days old")
+    try:
+        if 'admin' in (role.name for role in ctx.message.author.roles):
+            await client.send_typing(ctx.message.channel)
+            await client.say('gimme a sec')
+            await client.purge_from(channel=ctx.message.channel,limit=1000)
+            await client.send_typing(ctx.message.channel)
+            await client.say('there you go <@%s>' % ctx.message.author.id)
+        elif "admin" not in (role.name for role in ctx.message.author.roles):
+            await client.send_typing(ctx.message.channel)
+            await client.say('you have to be an admin in order to that')
+    except:
+        await client.say("`discord.ext.commands.errors.CommandInvokeError: Command raised an exception: HTTPException: BAD REQUEST (status code: 400): You can only bulk delete messages that are under 14 days old.`")
 
 @client.command(pass_context=True)#kicks a member
 async def kick(ctx,user:discord.Member):
@@ -259,6 +260,7 @@ async def on_member_join(member:discord.Member):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    await client.change_presence(game=discord.Game(name="with the members of the sever"))
+    await client.change_presence(game=discord.Game(name="with server members."))
+
 
 client.run(os.environ.get('TOKEN'))
