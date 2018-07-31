@@ -259,11 +259,7 @@ async def on_member_join(member:discord.Member):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    server=client.get_server('451988385016446986')
-    count=-1
-    for member in server.members:
-        count+=1
-    await client.change_presence(game=discord.Game(name="helping out {} member(s)".format(count)))
+    await client.change_presence(game=discord.Game(name="with the members of the sever".format(count)))
 
 
 client.run(os.environ.get('TOKEN'))
