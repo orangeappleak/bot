@@ -259,7 +259,6 @@ async def on_member_join(member:discord.Member):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    await client.change_presence(game=discord.Game(name="with the members of the sever".format(count)))
-
+    await client.change_presence(game=discord.Game(name="with the members of the sever"))
 
 client.run(os.environ.get('TOKEN'))
