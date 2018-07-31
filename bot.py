@@ -12,16 +12,9 @@ from discord import Channel
 bot_prefix=['++']
 client=discord.ext.commands.Bot(command_prefix=bot_prefix)
 client.remove_command('help')
+TOKEN="NDYyODc1NjA4MDkxODUyODAw.DkIFAQ.nEFG9E6Wcp7BI0GmzneJH8t2_Cs"
 
 stats=['PUBG','FORTNITE:battle royale','clash of clans','overwatch','clash royale']
-
-async def change_stat():#background task function
-    await client.wait_until_ready()
-    status=cycle(stats)
-    while not client.is_closed:
-        current_status=next(status)
-        await client.change_presence(game=discord.Game(name=current_status))
-        await asyncio.sleep(500)
 
 @client.event#just for fun
 async def on_message(msg):
@@ -36,7 +29,7 @@ async def on_message(msg):
             await client.delete_message(msg)
             await client.send_typing(msg.message.channel)
             await client.send_message(msg.author,'hey you cant be using such type of words in this server punk')
-    if msg.content.lower().startswith('?discord.py-documentation'):
+    if msg.content.lower().startswith('?discord.py_documentation'):
         embed=discord.Embed(description='API Reference--->\nhttp://discordpy.readthedocs.io/en/latest/api.html',colour=discord.Colour.blue())
         await client.send_typing(msg.channel)
         await client.send_message(msg.channel,embed=embed)
@@ -116,9 +109,11 @@ async def delete_messages(ctx):
         await client.purge_from(channel=ctx.message.channel,limit=1000)
         await client.send_typing(ctx.message.channel)
         await client.say('there you go <@%s>' % ctx.message.author.id)
-    else:
+    elif "admin" not in (role.name for role in ctx.message.author.roles):
         await client.send_typing(ctx.message.channel)
         await client.say('you have to be an admin in order to that')
+    else:
+        await client.say("sorry but i could not delete the messages which are 14 days old")
 
 @client.command(pass_context=True)#kicks a member
 async def kick(ctx,user:discord.Member):
@@ -225,7 +220,6 @@ async def help(ctx):
     embed.add_field(name='edit_channel [channel_name]->',value='it edits an existing channel',inline=False)
     embed.add_field(name='rules->',value='rules of the server',inline=False)
     embed.add_field(name='JUST FOR FUN COMMANDS',value='some fun commands that the bot can perform')
-    embed.add_field(name='=====================',value='')
     embed.add_field(name='coinflip->',value='flips a coin',inline=False)
     embed.add_field(name='kiss [user_name]->',value='kisses a member in the server',inline=False)
     embed.add_field(name='hug [user_name]->',value='gives a hug to the mentioned user',inline=False)
@@ -265,6 +259,11 @@ async def on_member_join(member:discord.Member):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
+    server=client.get_server('451988385016446986')
+    count=-1
+    for member in server.members:
+        count+=1
+    await client.change_presence(game=discord.Game(name="helping out {} member(s)".format(count)))
 
-client.loop.create_task(change_stat())
+
 client.run(os.environ.get('TOKEN'))
