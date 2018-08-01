@@ -242,7 +242,7 @@ async def rules(ctx):
 
 @client.command(pass_context=True)
 async def hug(ctx,user:discord.Member):
-    hug=discord.Embed(description='hey {}, {}\'s giving you a hug',colour=discord.Colour.dark_red())
+    hug=discord.Embed(description='hey {}, {}\'s giving you a hug'.format(user.mention,ctx.message.author.mention),colour=discord.Colour.dark_red())
     hugs=['https://cdn.discordapp.com/attachments/455323478267133962/461492044859179008/tenor.gif'
     'https://cdn.discordapp.com/attachments/455323478267133962/461492634461143050/oTuXFQ4.gif'
     ]
