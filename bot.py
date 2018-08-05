@@ -286,7 +286,7 @@ async def level_up(users,user,channel):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    server=client.get_server('451988385016446986')
+    server=client.get_server('475536103340769290')
     count=-1
     for member in server.members:
         count+=1
