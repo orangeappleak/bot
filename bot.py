@@ -12,8 +12,6 @@ from discord import Channel
 
 bot_prefix=['++']
 client=discord.ext.commands.Bot(command_prefix=bot_prefix)
-command_list=['++help','++say','++admin','++kick','++delete_messages','++create_channel','++delete_channel','++edit_channel','++coinflip','++kiss',
-'++hug','++rules']
 client.remove_command('help')
 TOKEN="NDYyODc1NjA4MDkxODUyODAw.DkIFAQ.nEFG9E6Wcp7BI0GmzneJH8t2_Cs"
 
@@ -220,7 +218,6 @@ async def help(ctx):
     embed.add_field(name='JUST FOR FUN COMMANDS',value='some fun commands that the bot can perform')
     embed.add_field(name='coinflip->',value='flips a coin',inline=False)
     embed.add_field(name='kiss [user_name]->',value='kisses a member in the server',inline=False)
-    embed.add_field(name='hug [user_name]->',value='gives a hug to the mentioned user',inline=False)
     await client.send_typing(ctx.message.channel)
     await client.send_message(ctx.message.author,embed=embed)
 
@@ -286,11 +283,7 @@ async def level_up(users,user,channel):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    server=client.get_server('475536103340769290')
-    count=-1
-    for member in server.members:
-        count+=1
-    await client.change_presence(game=discord.Game(name="helping out {} member(s)".format(count)))
+    await client.change_presence(game=discord.Game(name="just helping")
 
 
 client.run(os.environ.get('TOKEN'))
