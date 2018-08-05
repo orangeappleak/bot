@@ -283,7 +283,7 @@ async def level_up(users,user,channel):
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    await client.change_presence(game=discord.Game(name="just helping")
+    await client.change_presence(game=discord.Game(name="just helping"))
 
 
 client.run(os.environ.get('TOKEN'))
