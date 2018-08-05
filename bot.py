@@ -244,46 +244,7 @@ async def on_message(ctx):
             await client.send_message(ctx.channel,"`Invalid command:{}`".format(ctx.content))
             await client.send_message(ctx.channel,"`If you want any assistance please type in ++help`")
 
-@client.event#greets a new member on join
-async def on_member_join(member:discord.Member):
-    with open("users.json","r") as f:
-        users=json.load(f)
-    await update_data(users,member)
-    with open("users.json","w") as f:
-        json.dump(users,f)
-    await client.send_message(member,'welcome to the server {}'.format(member))
-    await client.send_message(member,'befor you start texting type in ++rules and check them first')
-    await client.send_message(member,'if you need any help then type in ++help command for assistance')
 
-@client.event
-async def on_message(ctx):
-    with open("users.json","r") as f:
-        users=json.load(f)
-    await update_data(users,ctx.author)
-    await expierience(users,ctx.author,5)
-    await level(users,ctx.author,ctx.channel)
-    if ctx.author.bot:
-        return
-    with open("users.json","w") as f:
-        json.dump(users,f)
-async def update_data(users,user):
-    if not user.id in users:
-        users[user.id]={}
-        users[user.id]['expierience'] = 0
-        users[user.id]['level'] = 1
-async def expierience(users,user,exp):
-    users[user.id]['expierience'] += exp
-async def level(users,user,channel):
-    expierience=users[user.id]['expierience']
-    level_start=users[user.id]['level']
-    level_end=int(expierience ** (1/4))
-
-    if level_start<level_end:
-        level_up=discord.Embed(name="level-up",color=discord.Color.orange())
-        level_up.set_thumbnail(url=user.avatar_url)
-        level_up.add_field(name="leveled_up",value="%s has leveled up to level %s" % (user.mention,level_end))
-        await client.send_message(channel,embed=level_up)
-        users[user.id]['level']=level_end
 
 @client.event
 async def on_ready():
