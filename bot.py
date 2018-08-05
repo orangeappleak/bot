@@ -11,10 +11,10 @@ from discord import Channel
 
 bot_prefix=['++']
 client=discord.ext.commands.Bot(command_prefix=bot_prefix)
+command_list=['++help','++say','++admin','++kick','++delete_messages','++create_channel','++delete_channel','++edit_channel','++coinflip','++kiss',
+'++hug','++rules']
 client.remove_command('help')
 TOKEN="NDYyODc1NjA4MDkxODUyODAw.DkIFAQ.nEFG9E6Wcp7BI0GmzneJH8t2_Cs"
-
-stats=['PUBG','FORTNITE:battle royale','clash of clans','overwatch','clash royale']
 
 @client.event#just for fun
 async def on_message(msg):
@@ -35,10 +35,6 @@ async def on_message(msg):
         await client.send_message(msg.channel,embed=embed)
     if msg.content.lower().startswith('?clash_royale_api'):
         await client.send_message(msg.channel,'https://docs.royaleapi.com/#/')
-    if msg.content.lower().startswith('thanks') or msg.content.lower().startswith('thank you'):
-        u=['no issuses','no problem dude','youre welcome','always here to help']
-        await client.send_typing(msg.channel)
-        await client.send_message(msg.channel,random.choice(u) + '{}'.format(msg.author.mention))
     await client.process_commands(msg)
 
 @client.command(pass_context=True)
@@ -240,27 +236,63 @@ async def rules(ctx):
     await client.send_typing(ctx.message.channel)
     await client.send_message(ctx.message.channel,embed=embed)
 
-@client.command(pass_context=True)
-async def hug(ctx,user:discord.Member):
-    hug=discord.Embed(description='hey {}, {}\'s giving you a hug'.format(user.mention,ctx.message.author.mention),colour=discord.Colour.dark_red())
-    hugs=['https://cdn.discordapp.com/attachments/455323478267133962/461492044859179008/tenor.gif'
-    'https://cdn.discordapp.com/attachments/455323478267133962/461492634461143050/oTuXFQ4.gif'
-    ]
-    hug.set_image(url=random.choice(hugs))
-    await client.say(embed=hug)
+@client.event
+async def on_message(ctx):
+    if ctx.content.startswith("++"):
+        if ctx.content not in command_list:
+            await client.send_message(ctx.channel,"`Invalid command:{}`".format(ctx.content))
+            await client.send_message(ctx.channel,"`If you want any assistance please type in ++help`")
 
 @client.event#greets a new member on join
 async def on_member_join(member:discord.Member):
+    with open("users.json","r") as f:
+        users=json.load(f)
+    await update_data(users,member)
+    with open("users.json","w") as f:
+        json.dump(users,f)
     await client.send_message(member,'welcome to the server {}'.format(member))
     await client.send_message(member,'befor you start texting type in ++rules and check them first')
     await client.send_message(member,'if you need any help then type in ++help command for assistance')
 
+@client.event
+async def on_message(ctx):
+    with open("users.json","r") as f:
+        users=json.load(f)
+    await update_data(users,ctx.author)
+    await expierience(users,ctx.author,5)
+    await level(users,ctx.author,ctx.channel)
+    if ctx.author.bot:
+        return
+    with open("users.json","w") as f:
+        json.dump(users,f)
+async def update_data(users,user):
+    if not user.id in users:
+        users[user.id]={}
+        users[user.id]['expierience'] = 0
+        users[user.id]['level'] = 1
+async def expierience(users,user,exp):
+    users[user.id]['expierience'] += exp
+async def level(users,user,channel):
+    expierience=users[user.id]['expierience']
+    level_start=users[user.id]['level']
+    level_end=int(expierience ** (1/4))
+
+    if level_start<level_end:
+        level_up=discord.Embed(name="level-up",color=discord.Color.orange())
+        level_up.set_thumbnail(url=user.avatar_url)
+        level_up.add_field(name="leveled_up",value="%s has leveled up to level %s" % (user.mention,level_end))
+        await client.send_message(channel,embed=level_up)
+        users[user.id]['level']=level_end
 
 @client.event
 async def on_ready():
     print('logged in as: %s' % client.user.name)
     print('ID is:' + client.user.id)
-    await client.change_presence(game=discord.Game(name="with server members."))
+    server=client.get_server('451988385016446986')
+    count=-1
+    for member in server.members:
+        count+=1
+    await client.change_presence(game=discord.Game(name="helping out {} member(s)".format(count)))
 
 
 client.run(os.environ.get('TOKEN'))
