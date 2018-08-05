@@ -293,7 +293,7 @@ async def on_ready():
     count=-1
     for member in server.members:
         count+=1
-    await client.change_presence(game=discord.Game(name="helping out {} member(s)".format(count)))
+    await client.change_presence(game=discord.Game(name="just helping"))
 
 
 client.run(os.environ.get('TOKEN'))
