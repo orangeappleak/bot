@@ -237,14 +237,50 @@ async def rules(ctx):
     await client.send_typing(ctx.message.channel)
     await client.send_message(ctx.message.channel,embed=embed)
 
+@client.event#greets a new member on join
+async def on_member_join(member:discord.Member):
+    await client.send_message(member,'welcome to the server {}'.format(member))
+    await client.send_message(member,'befor you start texting type in ++rules and check them first')
+    await client.send_message(member,'if you need any help then type in ++help command for assistance')
+
+@client.event
+async def on_member_join(member):
+    with open("users.json","r") as f:
+        users=json.load(f)
+    await update_data(users ,member)
+    with open("usrs.json","w") as f:
+        json.dump(users,f)
+
 @client.event
 async def on_message(ctx):
-    if ctx.content.startswith("++"):
-        if ctx.content not in command_list:
-            await client.send_message(ctx.channel,"`Invalid command:{}`".format(ctx.content))
-            await client.send_message(ctx.channel,"`If you want any assistance please type in ++help`")
+    if ctx.author.bot:
+        return
+    with open("users.json","r") as f:
+        users=json.load(f)
 
+    await update_data(users, ctx.author)
+    await expierience(users, ctx.author, 5)
+    await level_up(users, ctx.author, ctx.channel)
 
+    with open("users.json","w") as f:
+        json.dump(users, f)
+    await client.process_commands(ctx)
+
+async def update_data(users,user):
+    if user.id not in users:
+        users[user.id]={}
+        users[user.id]['expierience'] = 0
+        users[user.id]['level'] = 1
+async def expierience(users,user,exp):
+    users[user.id]['expierience'] += exp
+async def level_up(users,user,channel):
+    xp=users[user.id]['expierience']
+    level_start=users[user.id]['level']
+    level_end=int(xp ** (1/4))
+
+    if level_start<level_end:
+        await client.send_message(channel,"{} has grown to level {}".format(user.mention,level_end))
+        users[user.id]['level']=level_end
 
 @client.event
 async def on_ready():
@@ -254,7 +290,7 @@ async def on_ready():
     count=-1
     for member in server.members:
         count+=1
-    await client.change_presence(game=discord.Game(name="just helping"))
+    await client.change_presence(game=discord.Game(name="helping out {} member(s)".format(count)))
 
 
 client.run(os.environ.get('TOKEN'))
