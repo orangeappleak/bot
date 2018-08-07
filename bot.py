@@ -13,7 +13,6 @@ from discord import Channel
 bot_prefix=['++']
 client=discord.ext.commands.Bot(command_prefix=bot_prefix)
 client.remove_command('help')
-TOKEN="NDYyODc1NjA4MDkxODUyODAw.DkIFAQ.nEFG9E6Wcp7BI0GmzneJH8t2_Cs"
 
 @client.command(pass_context=True)#coinflip commmand
 async def coinflip(ctx):
