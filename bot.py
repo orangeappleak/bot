@@ -73,7 +73,7 @@ async def info(ctx,user:discord.Member):
     embed.set_thumbnail(url=user.avatar_url)
     embed.set_footer(text='\nTHAT\'S ALL I CAN GATHER')
     await client.send_typing(ctx.message.channel)
-    await client.send_message(ctx.message.author,embed=embed)
+    await client.send_message(ctx.message.channel,embed=embed)
 
 @client.command(pass_context=True)#deletes the messages
 async def delete_messages(ctx):
