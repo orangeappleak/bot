@@ -70,7 +70,7 @@ async def info(ctx,user:discord.Member):
     embed.add_field(name='id:',value=user.id,inline=False)
     embed.add_field(name='status:',value=user.status,inline=False)
     embed.add_field(name='member of the server from:',value=user.joined_at,inline=False)
-    embed.icon_url(url=user.avatar_url)
+    embed.set_image(url=user.avatar_url)
     embed.set_footer(text='\nTHAT\'S ALL I CAN GATHER')
     await client.send_typing(ctx.message.channel)
     await client.send_message(ctx.message.channel,embed=embed)
