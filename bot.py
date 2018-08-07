@@ -165,16 +165,16 @@ async def edit_channel(ctx,channel:discord.Channel):
         embed.add_field(name='2.',value='topic',inline=False)
         await client.say(embed=embed)
         msg=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
-            if msg.content.startswith('1'):
-                await client.say('so its the name you want to change\nplease enter a new name:')
-                name=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
-                edit=await client.edit_channel(channel,name=name.content)
-                await client.say('the channel name has changed from {} to {}'.format(name.content,channel.name))
-            else:
-                await client.say('what is the new topic of this channel?')
-                topic=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
-                await client.edit_channel(channel,topic=topic.content)
-                await client.say('the topic has been changed for the channel {}'.format(channel.name))
+        if msg.content.startswith('1'):
+            await client.say('so its the name you want to change\nplease enter a new name:')
+            name=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
+            edit=await client.edit_channel(channel,name=name.content)
+            await client.say('the channel name has changed from {} to {}'.format(name.content,channel.name))
+        else:
+            await client.say('what is the new topic of this channel?')
+            topic=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
+            await client.edit_channel(channel,topic=topic.content)
+            await client.say('the topic has been changed for the channel {}'.format(channel.name))
     else:
         await client.say('sorry but you are not an admin')
 
