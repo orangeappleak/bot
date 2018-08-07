@@ -220,8 +220,8 @@ async def on_member_join(member:discord.Member):
 async def level(ctx):
     with open("users.json","r") as f:
         user_info=json.load(f)
-        level=user_info[ctx.message.author.id]['level']
-        exp=user_info[ctx.message.author.id]['expierience']
+    level=user_info[ctx.message.author.id]['level']
+    exp=user_info[ctx.message.author.id]['expierience']
     print(user.name)
     print(level)
     print(exp)
