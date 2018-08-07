@@ -15,28 +15,7 @@ client=discord.ext.commands.Bot(command_prefix=bot_prefix)
 client.remove_command('help')
 TOKEN="NDYyODc1NjA4MDkxODUyODAw.DkIFAQ.nEFG9E6Wcp7BI0GmzneJH8t2_Cs"
 
-@client.event#just for fun
-async def on_message(msg):
-    if msg.content.lower().startswith('you have to'):
-        possibilities=['hey,i have my free will in this server and i cant be doing as you say okay','i have my freedom over here so........']
-        await client.send_typing(msg.message.channel)
-        await client.send_message(msg.channel,random.choice(possibilities))
-    chat_filter=['fuck','fuck off','dick','bitch']
-    msd=msg.content.split(" ")
-    for word in msd:
-        if word.lower() in chat_filter:
-            await client.delete_message(msg)
-            await client.send_typing(msg.message.channel)
-            await client.send_message(msg.author,'hey you cant be using such type of words in this server punk')
-    if msg.content.lower().startswith('?discord.py_documentation'):
-        embed=discord.Embed(description='API Reference--->\nhttp://discordpy.readthedocs.io/en/latest/api.html',colour=discord.Colour.blue())
-        await client.send_typing(msg.channel)
-        await client.send_message(msg.channel,embed=embed)
-    if msg.content.lower().startswith('?clash_royale_api'):
-        await client.send_message(msg.channel,'https://docs.royaleapi.com/#/')
-    await client.process_commands(msg)
-
-@client.command(pass_context=True)
+@client.command(pass_context=True)#coinflip commmand
 async def coinflip(ctx):
     await client.send_typing(ctx.message.channel)
     await client.say('whats youre call?')
@@ -59,7 +38,7 @@ async def coinflip(ctx):
         await client.send_typing(ctx.message.channel)
         await client.say('you lost it\ni am actually addicted towards winning{}'.format(ctx.message.author.mention))
 
-@client.command(pass_context=True)
+@client.command(pass_context=True)#just a kiss command
 async def kiss(ctx,member:discord.Member):
     k=discord.Embed(description='hey {},{} gave you kiss'.format(member.mention,ctx.message.author.mention))
     kisses=['https://media.giphy.com/media/v4JbTGe4KJjKo/giphy.gif'
@@ -185,20 +164,17 @@ async def edit_channel(ctx,channel:discord.Channel):
         embed.add_field(name='1.',value='name',inline=False)
         embed.add_field(name='2.',value='topic',inline=False)
         await client.say(embed=embed)
-        msg=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author,timeout=40.0)
-        try:
+        msg=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
             if msg.content.startswith('1'):
                 await client.say('so its the name you want to change\nplease enter a new name:')
-                name=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author,timeout=30.0)
+                name=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
                 edit=await client.edit_channel(channel,name=name.content)
                 await client.say('the channel name has changed from {} to {}'.format(name.content,channel.name))
             else:
                 await client.say('what is the new topic of this channel?')
-                topic=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author,timeout=30.0)
+                topic=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
                 await client.edit_channel(channel,topic=topic.content)
                 await client.say('the topic has been changed for the channel {}'.format(channel.name))
-        except:
-            await client.say('you took to long')
     else:
         await client.say('sorry but you are not an admin')
 
@@ -214,6 +190,7 @@ async def help(ctx):
     embed.add_field(name='create_channel->',value='it creates a new channel',inline=False)
     embed.add_field(name='delete_channel [channel_name]->',value='it deletes an existing channel',inline=False)
     embed.add_field(name='edit_channel [channel_name]->',value='it edits an existing channel',inline=False)
+    embed.add_field(name='info [user_name]->',value='it gives you the info of the user mentioned',inline=False)
     embed.add_field(name='rules->',value='rules of the server',inline=False)
     embed.add_field(name='JUST FOR FUN COMMANDS',value='some fun commands that the bot can perform')
     embed.add_field(name='coinflip->',value='flips a coin',inline=False)
@@ -240,7 +217,7 @@ async def on_member_join(member:discord.Member):
     await client.send_message(member,'befor you start texting type in ++rules and check them first')
     await client.send_message(member,'if you need any help then type in ++help command for assistance')
 
-@client.event
+@client.event#loads the user data into the json file
 async def on_member_join(member):
     with open("users.json","r") as f:
         users=json.load(f)
@@ -248,7 +225,7 @@ async def on_member_join(member):
     with open("usrs.json","w") as f:
         json.dump(users,f)
 
-@client.event
+@client.event#leveling system
 async def on_message(ctx):
     if ctx.author.bot:
         return
@@ -278,6 +255,17 @@ async def level_up(users,user,channel):
     if level_start<level_end:
         await client.send_message(channel,"{} has grown to level {}".format(user.mention,level_end))
         users[user.id]['level']=level_end
+        
+@client.event
+async def on_message(ctx):
+    message=ctx.content.split(" ")
+    chat_filter=['FUCK','fuck','BITCH','bitch','dick','DICK','FUCK OFF','fuck off','Fuck off']
+    for word in message:
+        if word in chat_filter:
+            await client.delete_message(ctx)
+            await client.send_message(ctx.author,"you cant be using such word in the server punk,mind youre language")
+    await client.process_commands(ctx)
+
 
 @client.event
 async def on_ready():
