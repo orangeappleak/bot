@@ -215,6 +215,17 @@ async def on_member_join(member:discord.Member):
     await client.send_message(member,'welcome to the server {}'.format(member))
     await client.send_message(member,'befor you start texting type in ++rules and check them first')
     await client.send_message(member,'if you need any help then type in ++help command for assistance')
+    
+@client.command(pass_context=True)#produces the info on level of the message author
+async def level(ctx):
+    user=ctx.message.author
+    with open("users.json","r") as f:
+        user_info=json.load(f)
+        level=user_info[user.id]['level']
+        exp=user_info[user.id]['expierience']
+    print(user.name)
+    print(level)
+    print(exp)
 
 @client.event#loads the user data into the json file
 async def on_member_join(member):
