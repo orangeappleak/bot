@@ -121,25 +121,25 @@ async def create_channel(context):
     if 'admin' in (role.name for role in context.message.author.roles):
         await client.send_typing(context.message.channel)
         await client.send_message(context.message.channel,'what do you want to name it??')
-        name=await client.wait_for_message(channel=context.message.channel,author=context.message.author
+        name=await client.wait_for_message(channel=context.message.channel,author=context.message.author)
         await client.send_typing(context.message.channel)
         await client.send_message(context.message.channel,'is it a voice channel or a text channel')
         confirmmsg=await client.wait_for_message(channel=context.message.channel,author=context.message.author)
-        if (confirmmsg.content==('voice' or 'Voice')):
+        if (confirmmsg.content.lower()=='voice'):
             await client.create_channel(context.message.server,name.content,type=discord.ChannelType.voice)
             await client.send_typing(context.message.channel)
             await client.say('the voice channel named {} has been created'.format(name.content))
-        elif(confirmmsg.content==('text' or 'Text')):
+        elif(confirmmsg.content.lower()=='text'):
             await client.create_channel(context.message.server,name.content,type=discord.ChannelType.text)
             await client.send_typing(context.message.channel)
             await client.say('the text channel named {} has been created'.format(name.content))
         else:
             await client.send_typing(context.message.channel)
-            await client.say('wrong channel type entered')
+            await client.say('wrong')
     else:
         await client.send_typing(context.message.channel)
         await client.say('sorry but you must be an admin in order to do that')
-
+  
 @client.command(pass_context=True)#deltes a channel
 async def delete_channel(ctx,channel:discord.Channel):
     if 'admin' in (role.name for role in ctx.message.author.roles):
