@@ -207,7 +207,7 @@ async def rules(ctx):
     await client.send_message(ctx.message.channel,embed=embed)
 
 @client.event#greets a new member on join
-async def on_member_join(member:discord.Member):
+async def on_member_join(member):
     await client.send_message(member,'welcome to the server {}'.format(member))
     await client.send_message(member,'befor you start texting type in ++rules and check them first')
     await client.send_message(member,'if you need any help then type in ++help command for assistance')
