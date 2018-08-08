@@ -126,17 +126,17 @@ async def create_channel(context):
             await client.send_typing(context.message.channel)
             await client.send_message(context.message.channel,'is it a voice channel or a text channel')
             confirmmsg=await client.wait_for_message(channel=context.message.channel,author=context.message.author,timeout=30.0)
-            if (confirmmsg.content=='voice'):
+            if (confirmmsg.content=='voice' or connfirmmsg.content=="Voice"):
                 await client.create_channel(context.message.server,name.content,type=discord.ChannelType.voice)
                 await client.send_typing(context.message.channel)
                 await client.say('the voice channel named {} has been created'.format(name.content))
-            elif(confirmmsg.content=='text'):
+            elif(confirmmsg.content=='text' or confirmmsg.content=="Text"):
                 await client.create_channel(context.message.server,name.content,type=discord.ChannelType.text)
                 await client.send_typing(context.message.channel)
                 await client.say('the text channel named {} has been created'.format(name.content))
             else:
                 await client.send_typing(context.message.channel)
-                await client.say('wrong')
+                await client.say('wrong channel type entered')
         except:
             await client.send_typing(context.message.channel)
             await client.say('you took too long try again')
