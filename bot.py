@@ -216,55 +216,50 @@ async def on_member_join(member:discord.Member):
     await client.send_message(member,'befor you start texting type in ++rules and check them first')
     await client.send_message(member,'if you need any help then type in ++help command for assistance')
     
-@client.command(pass_context=True)#produces the info on level of the message author
-async def level(ctx):
-    with open("users.json","r") as f:
-        user_info=json.load(f)
-    level=user_info[ctx.message.author.id]['level']
-    exp=user_info[ctx.message.author.id]['expierience']
-    print(user.name)
-    print(level)
-    print(exp)
-
 @client.event#loads the user data into the json file
 async def on_member_join(member):
-    with open("users.json","r") as f:
+    with open("users_level.json","r") as f:
         users=json.load(f)
-    await update_data(users ,member)
-    with open("usrs.json","w") as f:
-        json.dump(users,f)
+    await update_data(users,member)
+    with open("users_level.json","w") as f:
+        json.dump(users, f)
 
-@client.event#leveling system
+@client.event
 async def on_message(ctx):
     if ctx.author.bot:
         return
-    with open("users.json","r") as f:
+    with open("users_level.json","r") as f:
         users=json.load(f)
 
-    await update_data(users, ctx.author)
-    await expierience(users, ctx.author, 5)
-    await level_up(users, ctx.author, ctx.channel)
+    await update_data(users,ctx.author)
+    await experience(users,ctx.author,5)
+    await level(users,ctx.author,ctx.channel)
 
-    with open("users.json","w") as f:
+    with open("users_level.json","w") as f:
         json.dump(users, f)
     await client.process_commands(ctx)
 
 async def update_data(users,user):
-    if user.id not in users:
+    if not user.id in users:
         users[user.id]={}
-        users[user.id]['expierience'] = 0
-        users[user.id]['level'] = 1
-async def expierience(users,user,exp):
-    users[user.id]['expierience'] += exp
-async def level_up(users,user,channel):
-    xp=users[user.id]['expierience']
+        users[user.id]['experience']=0
+        users[user.id]['level']=1
+
+async def experience(users,user,xp):
+    users[user.id]['experience'] += xp
+
+async def level(users,user,channel):
+    exp=users[user.id]['experience']
     level_start=users[user.id]['level']
-    level_end=int(xp ** (1/4))
+    level_end=int(exp**(1/4))
 
     if level_start<level_end:
-        await client.send_message(channel,"{} has grown to level {}".format(user.mention,level_end))
+        embed=discord.Embed(title="Level up",description="{} has grown to level {}".format(user.mention,level_end),color=discord.Color.blue())
+        embed.set_thumbnail(url=user.avatar_url)
+        await client.send_message(channel,embed=embed)
         users[user.id]['level']=level_end
-        
+
+
 @client.event
 async def on_message(ctx):
     message=ctx.content.split(" ")
