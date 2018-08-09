@@ -30,7 +30,7 @@ async def coinflip(ctx):
     await asyncio.sleep(2.0)
     await client.send_typing(ctx.message.channel)
     final=await client.say('\n\n{}'.format(random.choice(poss)))
-    if reply.content==final.content:
+    if reply.content.lower()==final.content.lower():
         await client.send_typing(ctx.message.channel)
         await client.say('looks like you won MR.{}'.format(ctx.message.author.mention))
     else:
