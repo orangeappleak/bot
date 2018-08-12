@@ -69,7 +69,7 @@ async def info(ctx,user:discord.Member):
     embed.add_field(name='id:',value=user.id,inline=False)
     embed.add_field(name='status:',value=user.status,inline=False)
     embed.add_field(name='member of the server from:',value=user.joined_at,inline=False)
-    embed.set_image(url=user.avatar_url)
+    embed.set_thumbnail(url=user.avatar_url)
     embed.set_footer(text='\nTHAT\'S ALL I CAN GATHER')
     await client.send_typing(ctx.message.channel)
     await client.send_message(ctx.message.channel,embed=embed)
@@ -128,26 +128,26 @@ async def create_channel(context):
         if (confirmmsg.content.lower()=='voice'):
             await client.create_channel(context.message.server,name.content,type=discord.ChannelType.voice)
             await client.send_typing(context.message.channel)
-            await client.say('the voice channel named {} has been created'.format(name.content))
+            await client.say('`the voice channel named {} has been created`'.format(name.content))
         elif(confirmmsg.content.lower()=='text'):
             await client.create_channel(context.message.server,name.content,type=discord.ChannelType.text)
             await client.send_typing(context.message.channel)
-            await client.say('the text channel named {} has been created'.format(name.content))
+            await client.say('`the text channel named {} has been created`'.format(name.content))
         else:
             await client.send_typing(context.message.channel)
-            await client.say('wrong')
+            await client.say('the channel type you have entered is invalid')
     else:
         await client.send_typing(context.message.channel)
         await client.say('sorry but you must be an admin in order to do that')
-  
-@client.command(pass_context=True)#deltes a channel
+
+@client.command(pass_context=True)#deletes a channel
 async def delete_channel(ctx,channel:discord.Channel):
     if 'admin' in (role.name for role in ctx.message.author.roles):
         await client.send_typing(ctx.message.channel)
         await client.say('wait a sec')
         await client.delete_channel(channel)
         await client.send_typing(ctx.message.channel)
-        await client.say('the channel named #{} has been deleted'.format(channel.name))
+        await client.say('`the channel named #{} has been deleted`'.format(channel.name))
     else:
         await client.send_typing(ctx.message.channel)
         await client.say('you must be an admin in order to that')
@@ -164,7 +164,7 @@ async def edit_channel(ctx,channel:discord.Channel):
             await client.say('so its the name you want to change\nplease enter a new name:')
             name=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
             edit=await client.edit_channel(channel,name=name.content)
-            await client.say('the channel name has changed from {} to {}'.format(name.content,channel.name))
+            await client.say('the channel name has changed from {} to {}'.format(channel.name,name.content))
         else:
             await client.say('what is the new topic of this channel?')
             topic=await client.wait_for_message(channel=ctx.message.channel,author=ctx.message.author)
@@ -208,10 +208,9 @@ async def rules(ctx):
 
 @client.event#greets a new member on join
 async def on_member_join(member):
-    await client.send_message(member,'welcome to the server {}'.format(member))
-    await client.send_message(member,'befor you start texting type in ++rules and check them first')
-    await client.send_message(member,'if you need any help then type in ++help command for assistance')
-    
+    channel =  discord.utils.get(server.channels,name='welcome',type=ChannelType.text)
+    await client.send_mesasge(channel,'welcome to the server {} \n enjoy youre stay \n `For assistance and command list type in ++help`'.format(member.mention))
+
 @client.event#loads the user data into the json file
 async def on_member_join(member):
     with open("users_level.json","r") as f:
@@ -222,6 +221,8 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(ctx):
+    if ctx.context.bot:
+        return
     if ctx.author.bot:
         return
     with open("users_level.json","r") as f:
@@ -256,7 +257,7 @@ async def level(users,user,channel):
         users[user.id]['level']=level_end
 
 @client.event
-async def on_message(ctx):
+async def on_message(ctx):#chat filter
     message=ctx.content.split(" ")
     chat_filter=['fuck','bitch','fuck off','dick']
     for word in message:
@@ -264,14 +265,6 @@ async def on_message(ctx):
             await client.delete_message(ctx)
             await client.send_message(ctx.author,"you cant be using such word in the server punk,mind youre language")
     await client.process_commands(ctx)
-
-
-
-@client.event
-async def on_ready():
-    print('logged in as: %s' % client.user.name)
-    print('ID is:' + client.user.id)
-    await client.change_presence(game=discord.Game(name="just helping"))
 
 
 client.run(os.environ.get('TOKEN'))
