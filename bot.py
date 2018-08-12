@@ -260,7 +260,7 @@ async def on_message(ctx):
     message=ctx.content.split(" ")
     chat_filter=['fuck','bitch','fuck off','dick']
     for word in message:
-        if word.upper() in chat_filter:
+        if word.lower() in chat_filter:
             await client.delete_message(ctx)
             await client.send_message(ctx.author,"you cant be using such word in the server punk,mind youre language")
     await client.process_commands(ctx)
