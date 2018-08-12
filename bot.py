@@ -255,16 +255,16 @@ async def level(users,user,channel):
         await client.send_message(channel,embed=embed)
         users[user.id]['level']=level_end
 
-
 @client.event
 async def on_message(ctx):
     message=ctx.content.split(" ")
-    chat_filter=['FUCK','fuck','BITCH','bitch','dick','DICK','FUCK OFF','fuck off','Fuck off','Bitch','Dick']
+    chat_filter=['fuck','bitch','fuck off','dick']
     for word in message:
-        if word in chat_filter:
+        if word.upper() in chat_filter:
             await client.delete_message(ctx)
             await client.send_message(ctx.author,"you cant be using such word in the server punk,mind youre language")
     await client.process_commands(ctx)
+
 
 
 @client.event
