@@ -259,7 +259,7 @@ async def level(users,user,channel):
 @client.event
 async def on_message(ctx):
     message=ctx.content.split(" ")
-    chat_filter=['FUCK','fuck','BITCH','bitch','dick','DICK','FUCK OFF','fuck off','Fuck off']
+    chat_filter=['FUCK','fuck','BITCH','bitch','dick','DICK','FUCK OFF','fuck off','Fuck off','Bitch','Dick']
     for word in message:
         if word in chat_filter:
             await client.delete_message(ctx)
