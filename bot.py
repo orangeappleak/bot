@@ -266,5 +266,10 @@ async def on_message(ctx):#chat filter
             await client.send_message(ctx.author,"you cant be using such word in the server punk,mind youre language")
     await client.process_commands(ctx)
 
+@client.event
+async def on_ready():
+    print('logged in as: %s' % client.user.name)
+    print('ID is:' + client.user.id)
+    await client.change_presence(game=discord.Game(name="bot under maintanence"))
 
 client.run(os.environ.get('TOKEN'))
